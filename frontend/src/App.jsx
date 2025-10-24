@@ -4,9 +4,11 @@ import Home from "./pages/Home";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screenflex flex-col w-full">
       <Navbar />
-      <Home />
+      <div className="flex-grow flex items-center justify-center">
+        <Home />
+      </div>
     </div>
   );
 }
