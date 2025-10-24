@@ -1,9 +1,30 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Plus, ArrowUp } from 'lucide-react';
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+    const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async () => {
+    if (!file) return alert("Please select a file");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setUploading(true);
+      const res = await axios.post("http://localhost:5000/upload", formData);
+      alert(res.data.message || "File uploaded successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed!");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -24,8 +45,8 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="flex flex-col h-[60vh] border rounded-lg overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+    <div className="flex flex-col rounded-3xl overflow-hidden">
+      <div className="flex-1 overflow-y-auto space-y-2">
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -39,19 +60,29 @@ const ChatBox = () => {
           </div>
         ))}
       </div>
-      <div className="flex border-t p-2">
+      <div className="flex items-center gap-2 bg-[#1c2337] px-3 rounded-3xl shadow-[0_0_25px_5px_rgba(251,191,36,0.5)]">
+        <label className="cursor-pointer">
+          <input
+            type="file"
+            accept=".pdf,.txt"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="hidden"
+          />
+          <Plus 
+            onClick={handleUpload}
+          />
+        </label>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask something..."
-          className="flex-1 p-2 border rounded-l-lg focus:outline-none"
+          className="flex-1 focus:outline-none px-1 py-3.5"
         />
-        <button
+        <ArrowUp
+          size={30}
+          className="bg-[#86a1ea] p-1 rounded-3xl text-black"
           onClick={handleSend}
-          className="bg-blue-600 text-white px-4 py-2 rounded-r-lg"
-        >
-          Send
-        </button>
+        />
       </div>
     </div>
   );
