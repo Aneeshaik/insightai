@@ -4,9 +4,9 @@ import Home from "./pages/Home";
 
 function App() {
   return (
-    <div className="min-h-screenflex flex-col w-full">
+    <div className="min-h-screen flex flex-col w-full">
       <Navbar />
-      <div className="flex-grow flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center">
         <Home />
       </div>
     </div>
