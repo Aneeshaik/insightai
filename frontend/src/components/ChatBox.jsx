@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Plus, ArrowUp } from 'lucide-react';
+import { Paperclip, BookOpen, ArrowUp } from 'lucide-react';
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
@@ -64,18 +64,8 @@ const ChatBox = () => {
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-2 bg-[#1c2337] px-3 rounded-3xl shadow-2xl">
-        <label className="cursor-pointer">
-          <input
-            type="file"
-            accept=".pdf,.txt"
-            onChange={(e) => setFile(e.target.files[0])}
-            className="hidden"
-          />
-          <Plus 
-            onClick={handleUpload}
-          />
-        </label>
+      {messages.length === 0 && <p className="text-center my-8 text-2xl font-semibold">How Can I help you?</p>}
+      <div className="flex flex-col items-start gap-2 bg-[#1c2337] p-2 rounded-3xl shadow-2xl">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -86,13 +76,38 @@ const ChatBox = () => {
             }
           }}
           placeholder="Ask something..."
-          className="flex-1 focus:outline-none px-1 py-3.5"
+          className="flex-1 focus:outline-none px-1 py-2 w-full"
         />
-        <ArrowUp
-          size={30}
-          className="bg-[#86a1ea] p-1 rounded-3xl text-black"
-          onClick={handleSend}
-        />
+        <div className="flex justify-between items-center w-full">
+          <div className="flex gap-3 items-center">
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                accept=".pdf,.txt"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="hidden"
+              />
+              <div className="flex gap-1.5 items-center border-1 px-2.5 py-1 border-gray-600 rounded-4xl">
+                <Paperclip
+                  size={15}
+                  onClick={handleUpload}
+                />
+                <p className="text-sm">Attach</p>
+              </div>
+            </label>
+            <div className="flex gap-1.5 items-center border-1 px-2.5 py-1 border-gray-600 rounded-4xl cursor-pointer">
+              <BookOpen
+                size={15}
+              />
+              <p className="text-sm">Study</p>
+            </div>
+          </div>
+          <ArrowUp
+            size={30}
+            className="bg-[#86a1ea] p-1 rounded-3xl text-black"
+            onClick={handleSend}
+          />
+        </div>
       </div>
     </div>
   );
