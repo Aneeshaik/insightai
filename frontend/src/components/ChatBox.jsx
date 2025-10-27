@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Paperclip, BookOpen, ArrowUp } from 'lucide-react';
+import { useEffect } from "react";
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
@@ -44,13 +45,19 @@ const ChatBox = () => {
     }
   };
 
+  useEffect(() => {
+    if(file){
+      handleUpload()
+    }
+  }, [file])
+
   return (
     <div className={`flex flex-col overflow-hidden ${
       messages.length > 0 ? "justify-between pt-12 h-[calc(100vh-64px)]" : "justify-end"
     }`}>
       <div className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
         messages.length > 0 ? "pb-4" : ""
-      }`}>
+      }`} style={{ scrollbarWidth: "none" }}>
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -90,7 +97,6 @@ const ChatBox = () => {
               <div className="flex gap-1.5 items-center border-1 px-2.5 py-1 border-gray-600 rounded-4xl">
                 <Paperclip
                   size={15}
-                  onClick={handleUpload}
                 />
                 <p className="text-sm">Attach</p>
               </div>
