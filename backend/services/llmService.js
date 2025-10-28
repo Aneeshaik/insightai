@@ -14,16 +14,35 @@ const llm = new ChatGoogleGenerativeAI({
 });
 
 export async function createVectorStoreFromText(text) {
-    const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
-        chunkOverlap: 200
-    })
-    const docs = splitter.splitDocuments([new Document({ pageContent: text })])
-    const embeddings = new GoogleGenerativeAIEmbeddings({
-        apiKey: process.env.GOOGLE_API_KEY
-    })
-    const store = await FaissStore.fromDocuments(await docs, embeddings)
-    await store.save("./vectorStore")
+    try {
+        const splitter = new RecursiveCharacterTextSplitter({
+            chunkSize: 1000,
+            chunkOverlap: 200
+        });
+        const docs = await splitter.splitDocuments([new Document({ pageContent: text })]);
+        console.log("docs docs ", docs);
+        const embeddings = new GoogleGenerativeAIEmbeddings({
+            model: "gemini-embedding-001",
+            apiKey: process.env.GOOGLE_API_KEY
+        });
+        console.log("after embedding");
+        const result = await embeddings.embedQuery("Test query");
+        console.log("Embedding result:", result);
+        console.log("Starting FaissStore.fromDocuments");
+        const store = await FaissStore.fromDocuments(docs, embeddings);
+        console.log("Completed FaissStore.fromDocuments");
+        console.log("store sotore ", store);
+        try{
+           const saveResult = await store.save("./vectorStore");
+           console.log("Saved result ", saveResult)
+        } catch(error) {
+            console.log("Error in saving the file ", error)
+        }
+        console.log("Test store saved");
+    } catch (error) {
+        console.error("Error in createVectorStoreFromText:", error);
+        throw error;
+    }
 }
 
 export async function loadVectorStore() {

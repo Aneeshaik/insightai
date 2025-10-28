@@ -13,6 +13,7 @@ router.post('/', upload.single('file'), async(req, res) => {
         const filePath = path.resolve(req.file.path)
         console.log("Processing file ", filePath)
         const text = await extractTextFromPdf(filePath)
+        console.log("text text ", text)
         await createVectorStoreFromText(text)
         res.json({ message: "File processed and indexed successfully" })
     } catch(err) {
