@@ -1,6 +1,7 @@
 import express from 'express'
 import { askLLM, loadVectorStore } from '../services/llmService.js';
-import fs from 'fs'
+import path from 'path';
+import fs from 'fs/promises'
 
 const router = express.Router();
 
@@ -9,14 +10,16 @@ router.post("/", async (req, res) => {
         const { message } = req.body
         if(!message) return res.status(400).json({ reply: "Message required" })
         let store
-        try{
-            const indexPath = './vectorStore/faiss.index'
-            fs.access(indexPath)
-            store = await loadVectorStore()
+        const indexPath = path.resolve('./vectorStore/faiss.index');
+        console.log('Resolved indexPath:', indexPath);
+        try {
+            await fs.access(indexPath);
+            console.log("Vector store found, loading...");
+            store = await loadVectorStore();
         } catch (err) {
+            console.error('Error accessing vector store:', err.message);
             console.log('Vector store not found, using LLM directly.');
         }
-
         let reply;
         if(store){
             // Perform similarity search if vector store is available
