@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import { Paperclip, BookOpen, ArrowUp } from 'lucide-react';
 import { useEffect } from "react";
+import TypingEffect from "./TypingEffect";
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-    const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const chatRef = useRef(null)
 
   const handleUpload = async () => {
     if (!file) return alert("Please select a file");
@@ -35,6 +38,7 @@ const ChatBox = () => {
     setInput("");
 
     try {
+      setIsLoading(true)
       const res = await axios.post("http://localhost:5000/chat", {
         message: input,
       });
@@ -42,8 +46,19 @@ const ChatBox = () => {
     } catch (err) {
       console.error(err);
       alert("Error fetching AI response!");
+    } finally {
+      setIsLoading(false)
     }
   };
+
+  useEffect(() => {
+    if(messages.length > 0 && messages[messages.length - 1].role === 'user'){
+      chatRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+    }
+  }, [messages])
 
   useEffect(() => {
     if(file){
@@ -55,7 +70,7 @@ const ChatBox = () => {
     <div className={`flex flex-col overflow-hidden ${
       messages.length > 0 ? "justify-between pt-12 h-[calc(100vh-64px)]" : "justify-end"
     }`}>
-      <div className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
+      <div ref={chatRef} className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
         messages.length > 0 ? "pb-4" : ""
       }`} style={{ scrollbarWidth: "none" }}>
         {messages.map((msg, i) => (
@@ -67,9 +82,14 @@ const ChatBox = () => {
                 : "bg-none self-start text-left"
             }`}
           >
-            {msg.content}
+            {msg.role === 'ai' ? <TypingEffect text={msg.content} speed={30} /> : msg.content}
           </div>
         ))}
+        {isLoading && (
+          <p className="text-gray-100 italic self-start text-left px-4 py-2 animate-pulse">
+            Thinking...
+          </p>
+        )}
       </div>
       {messages.length === 0 && <p className="text-center my-8 text-2xl font-semibold">How Can I help you?</p>}
       <div className="flex flex-col items-start gap-2 bg-[#1c2337] p-2 rounded-3xl shadow-2xl">
