@@ -26,8 +26,6 @@ export async function createVectorStoreFromText(text) {
             apiKey: process.env.GOOGLE_API_KEY
         });
         console.log("after embedding");
-        const result = await embeddings.embedQuery("Test query");
-        console.log("Embedding result:", result);
         console.log("Starting FaissStore.fromDocuments");
         const store = await FaissStore.fromDocuments(docs, embeddings);
         console.log("Completed FaissStore.fromDocuments");
@@ -47,6 +45,7 @@ export async function createVectorStoreFromText(text) {
 
 export async function loadVectorStore() {
     const embeddings = new GoogleGenerativeAIEmbeddings({
+        model: "gemini-embedding-001",
         apiKey: process.env.GOOGLE_API_KEY
     })
     const store = await FaissStore.load('./vectorStore', embeddings)
