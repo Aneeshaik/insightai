@@ -45,6 +45,9 @@ const ChatBox = () => {
     setFile(null)
 
     try {
+      if(file){
+        await handleUpload()
+      }
       setIsLoading(true)
       const res = await axios.post("http://localhost:5000/chat", {
         message: input,
@@ -62,26 +65,21 @@ const ChatBox = () => {
     if(messages.length > 0 && messages[messages.length - 1].role === 'user' && lastMessageRef.current){
       lastMessageRef.current.scrollIntoView({
         behavior: 'smooth',
-        block: 'start',
+        block: 'start'
       })
     }
   }, [messages])
 
-  useEffect(() => {
-    if(file){
-      handleUpload()
-    }
-  }, [file])
-
   return (
-    <div className={`flex flex-col overflow-hidden ${
-      messages.length > 0 ? "justify-between pt-12 h-[calc(100vh-44px)]" : "justify-end"
+    <div className={`flex flex-col ${
+      messages.length > 0 ? "h-[calc(100vh-44px)]" : ""
     }`}>
+      {messages.length > 0 && <div className="h-10 flex-shrink-0" />}
       <div ref={chatRef} className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
-        messages.length > 0 ? "pb-4" : ""
+        messages.length > 0 ? "pb-4" : "justify-end"
       }`} style={{ scrollbarWidth: "none" }}>
        {messages.map((msg, i) => (
-          <div key={i} className="flex flex-col gap-2">
+          <div key={i} className="relative flex flex-col gap-2">
             {/* File preview (only for user messages when file exists) */}
             {msg.file && (
               <div className="relative flex items-start self-end gap-2 border border-[#323232] py-2 px-4 rounded-2xl w-fit">
@@ -121,7 +119,7 @@ const ChatBox = () => {
         )}
       </div>
       {messages.length === 0 && <p className="text-center my-8 text-2xl font-semibold">How Can I help you?</p>}
-      <div className="flex flex-col items-start gap-2 text-sm bg-[#1c2337] p-2 rounded-3xl shadow-2xl">
+      <div className="flex flex-col items-start gap-2 bg-[#1c2337] p-2 rounded-3xl shadow-2xl">
         {file && <div className="relative flex items-start gap-2 border-1 border-[#323232] py-2 px-2 rounded-2xl">
           <File 
             size={30}
@@ -131,14 +129,19 @@ const ChatBox = () => {
             <p className="text-xs">{file.type.split('/')[1].toUpperCase()}</p>
           </div>
           <X 
-            className="ml-3"
+            className="ml-3 cursor-pointer"
             size={15}
             onClick={() => setFile(null)}
           />
         </div>}
-        <input
+        <textarea
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            setInput(e.target.value);
+            const textarea = e.target;
+            textarea.style.height = 'auto';
+            textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`; // Grow to content height or max-height
+          }}
           onKeyDown={(e) => {
             if(e.key === "Enter" && !e.shiftKey){
               e.preventDefault()
@@ -146,7 +149,7 @@ const ChatBox = () => {
             }
           }}
           placeholder="Ask something..."
-          className="flex-1 focus:outline-none px-1 py-2 w-full"
+          className="focus:outline-none px-1 w-full bg-transparent text-white resize-none overflow-y-auto"
         />
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-3 items-center">

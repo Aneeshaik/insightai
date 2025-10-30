@@ -4,7 +4,7 @@ import ChatBox from "../components/ChatBox";
 
 const Home = () => {
   return (
-    <div className="p-4 space-y-6 w-[800px]">
+    <div className="p-4 w-[800px]">
       <ChatBox />
     </div>
   );
