@@ -1,8 +1,9 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const TypingEffect = ({ text, speed, onDone }) => {
+const TypingEffect = ({ text, speed, onTyping, onDone, isTyping, setIsTyping, showCursor }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -14,6 +15,8 @@ const TypingEffect = ({ text, speed, onDone }) => {
     const interval = setInterval(() => {
       setIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
+        if(nextIndex > 5) setIsTyping(false)
+        if(onTyping) onTyping()
         if (nextIndex >= text.length) {
           clearInterval(interval);
           if (onDone) onDone();
@@ -23,12 +26,21 @@ const TypingEffect = ({ text, speed, onDone }) => {
     }, speed);
 
     return () => clearInterval(interval);
-  }, [text, speed, onDone]);
+  }, [text, speed, onTyping, onDone]);
 
   // Slice the text up to the current index
   const displayedText = text.slice(0, index);
 
-  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{displayedText}</ReactMarkdown>;
+  return (
+    <div className="flex">
+      <div>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {displayedText}
+        </ReactMarkdown>
+      </div>
+      {isTyping && showCursor && <span className="animate-pulse">|</span>}
+    </div>
+  )
 };
 
-export default TypingEffect;
+export default React.memo(TypingEffect);

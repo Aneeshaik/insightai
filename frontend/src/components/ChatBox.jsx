@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import axios from "axios";
 import { Paperclip, BookOpen, ArrowUp, File, X } from 'lucide-react';
 import { useEffect } from "react";
@@ -9,6 +9,7 @@ const ChatBox = () => {
   const [input, setInput] = useState("");
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
   const [uploading, setUploading] = useState(false)
   const chatRef = useRef(null)
   const lastMessageRef = useRef(null);
@@ -40,7 +41,11 @@ const ChatBox = () => {
       ...(file && { file })
     };
 
-    setMessages((prev) => [...prev, newMessage]);
+    setMessages((prev) => [
+      ...prev, 
+      newMessage, 
+      { role: "ai", content: "" }
+    ]);
     setInput("");
     setFile(null)
 
@@ -49,10 +54,16 @@ const ChatBox = () => {
         await handleUpload()
       }
       setIsLoading(true)
+      setIsTyping(true)
       const res = await axios.post("http://localhost:5000/chat", {
         message: input,
       });
-      setMessages((prev) => [...prev, { role: "ai", content: res.data.reply }]);
+      setMessages((prev) => {
+        const updated = [...prev]
+        updated[updated.length-1] = { role: "ai", content: res.data.reply }
+        return updated
+      })
+      // setMessages((prev) => [...prev, { role: "ai", content: res.data.reply }]);
     } catch (err) {
       console.error(err);
       alert("Error fetching AI response!");
@@ -61,12 +72,23 @@ const ChatBox = () => {
     }
   };
 
-  useEffect(() => {
-    if(messages.length > 0 && messages[messages.length - 1].role === 'user' && lastMessageRef.current){
+  const handleTypingScroll = useCallback(() => {
+    if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      })
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if(messages.length > 0 && lastMessageRef.current){
+      setTimeout(() => {
+        lastMessageRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 1000);
     }
   }, [messages])
 
@@ -104,19 +126,20 @@ const ChatBox = () => {
               }`}
             >
               {msg.role === 'ai' ? (
-                <TypingEffect text={msg.content} speed={30} />
+                <TypingEffect 
+                  text={msg.content} 
+                  speed={30}
+                  isTyping={isTyping}
+                  setIsTyping={setIsTyping}
+                  onTyping={handleTypingScroll}
+                  showCursor={i === messages.length - 1}
+                />
               ) : (
                 msg?.content && <p>{msg.content}</p>
               )}
             </div>
           </div>
         ))}
-
-        {isLoading && (
-          <p className="text-gray-100 italic self-start text-left py-2 animate-pulse">
-            Thinking...
-          </p>
-        )}
       </div>
       {messages.length === 0 && <p className="text-center my-8 text-2xl font-semibold">How Can I help you?</p>}
       <div className="flex flex-col items-start gap-2 bg-[#1c2337] p-2 rounded-3xl shadow-2xl">
