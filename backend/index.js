@@ -17,5 +17,9 @@ app.use(express.json())
 app.use('/upload', uploadRouter)
 app.use('/chat', chatRouter)
 
+app.get('/', (req, res) => {
+    console.log("Paper brain backend")
+})
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
