@@ -7,7 +7,7 @@ import { createVectorStoreFromText } from '../services/llmService.js';
 
 const router = express.Router();
 const uploadDir = "/tmp/uploads"
-await fs.mkdir(uploadDir, { recursive: true });
+fs.mkdir(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
