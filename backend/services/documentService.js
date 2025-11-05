@@ -1,8 +1,11 @@
 import fs from 'fs';
-import { createRequire } from 'module';
 
-const require = createRequire(import.meta.url);
-const pdf = require('pdf-parse');
+let pdf;
+const loadPdfParse = async () => {
+  const mod = await import('pdf-parse');
+  pdf = mod.default || mod;
+};
+await loadPdfParse();
 
 export async function extractTextFromPdf(filePath) {
   const dataBuffer = fs.readFileSync(filePath);
