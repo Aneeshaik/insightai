@@ -1,6 +1,7 @@
 import express from 'express'
 import multer from 'multer'
 import path from 'path'
+import fs from 'fs'
 import { extractTextFromPdf } from '../services/documentService.js';
 import { createVectorStoreFromText } from '../services/llmService.js';
 
