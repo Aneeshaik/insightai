@@ -4,7 +4,6 @@ import { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from "@langchain
 import { HumanMessage } from '@langchain/core/messages'
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { Document } from "@langchain/core/documents"
-import { OpenAI } from 'openai'
 dotenv.config()
 
 const llm = new ChatGoogleGenerativeAI({
