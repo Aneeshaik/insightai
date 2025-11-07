@@ -7,7 +7,18 @@ import chatRouter from './routes/chatRoute.js'
 dotenv.config()
 const app = express()
 
-app.use(cors())
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://paper-brain-pi.vercel.app'
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(express.json())
 
 app.use(cors())
