@@ -21,8 +21,7 @@ const ChatBox = () => {
 
     try {
       setUploading(true);
-      const res = await axios.post("https://paper-brain-94qd.vercel.app/upload", formData);
-      alert(res.data.message || "File uploaded successfully!");
+      await axios.post("https://paper-brain-94qd.vercel.app/upload", formData);
     } catch (err) {
       console.error(err);
       alert("Upload failed!");
