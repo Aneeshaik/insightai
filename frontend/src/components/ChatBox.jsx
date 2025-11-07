@@ -8,7 +8,6 @@ const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [file, setFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const [uploading, setUploading] = useState(false)
   const chatRef = useRef(null)
@@ -22,7 +21,7 @@ const ChatBox = () => {
 
     try {
       setUploading(true);
-      const res = await axios.post("http://localhost:5000/upload", formData);
+      const res = await axios.post("https://paper-brain-94qd.vercel.app/upload", formData);
       alert(res.data.message || "File uploaded successfully!");
     } catch (err) {
       console.error(err);
@@ -53,9 +52,8 @@ const ChatBox = () => {
       if(file){
         await handleUpload()
       }
-      setIsLoading(true)
       setIsTyping(true)
-      const res = await axios.post("http://localhost:5000/chat", {
+      const res = await axios.post("https://paper-brain-94qd.vercel.app/chat", {
         message: input,
       });
       setMessages((prev) => {
@@ -67,8 +65,6 @@ const ChatBox = () => {
     } catch (err) {
       console.error(err);
       alert("Error fetching AI response!");
-    } finally {
-      setIsLoading(false)
     }
   };
 
