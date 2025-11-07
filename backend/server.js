@@ -18,8 +18,9 @@ app.use('/upload', uploadRouter)
 app.use('/chat', chatRouter)
 
 app.get('/', (req, res) => {
-    console.log("Paper brain backend")
-})
+  console.log("Paper brain backend");
+  res.send("Paper brain backend is running 🚀");
+});
 
 const PORT = process.env.PORT || 5000;
 
