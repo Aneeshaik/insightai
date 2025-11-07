@@ -4,13 +4,14 @@ import path from 'path';
 import fs from 'fs/promises'
 
 const router = express.Router();
+const vectorStorePath = path.join('/tmp', 'vectorStore')
 
 router.post("/", async (req, res) => {
     try{
         const { message } = req.body
         if(!message) return res.status(400).json({ reply: "Message required" })
         let store
-        const indexPath = path.resolve('./vectorStore/faiss.index');
+        const indexPath = path.resolve(vectorStorePath);
         console.log('Resolved indexPath:', indexPath);
         try {
             await fs.access(indexPath);
