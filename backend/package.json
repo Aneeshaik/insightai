@@ -24,6 +24,7 @@
     "faiss-node": "^0.5.1",
     "langchain": "^1.0.1",
     "multer": "^2.0.2",
+    "patch-package": "^8.0.1",
     "pdf-parse": "1.1.1"
   }
 }
