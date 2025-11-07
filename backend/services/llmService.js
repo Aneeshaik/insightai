@@ -38,7 +38,7 @@ export async function createVectorStoreFromText(text) {
             fs.mkdirSync(vectorStorePath, {recursive: true})
             console.log("Created vector store folder in temp")
            }
-           const saveResult = await store.save("./vectorStore");
+           const saveResult = await store.save(vectorStorePath);
            console.log("Saved result ", saveResult)
         } catch(error) {
             console.log("Error in saving the file ", error)
