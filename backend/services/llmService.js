@@ -1,10 +1,13 @@
 import dotenv from 'dotenv'
+import fs from 'fs'
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from "@langchain/google-genai"
 import { HumanMessage } from '@langchain/core/messages'
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { Document } from "@langchain/core/documents"
 dotenv.config()
+
+const vectorStorePath = path.join('/tmp', 'vectorStore')
 
 const llm = new ChatGoogleGenerativeAI({
     model: "gemini-2.5-flash",
@@ -30,6 +33,10 @@ export async function createVectorStoreFromText(text) {
         console.log("Completed FaissStore.fromDocuments");
         console.log("store sotore ", store);
         try{
+           if(!fs.existsSync(vectorStorePath)){
+            fs.mkdirSync(vectorStorePath, {recursive: true})
+            console.log("Created vector store folder in temp")
+           }
            const saveResult = await store.save("./vectorStore");
            console.log("Saved result ", saveResult)
         } catch(error) {
@@ -47,7 +54,7 @@ export async function loadVectorStore() {
         model: "gemini-embedding-001",
         apiKey: process.env.GOOGLE_API_KEY
     })
-    const store = await FaissStore.load('./vectorStore', embeddings)
+    const store = await FaissStore.load(vectorStorePath, embeddings)
     return store
 }
 
