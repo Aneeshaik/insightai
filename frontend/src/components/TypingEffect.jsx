@@ -15,7 +15,7 @@ const TypingEffect = ({ text, speed, onTyping, onDone, isTyping, setIsTyping, sh
     const interval = setInterval(() => {
       setIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
-        if(nextIndex > 5) setIsTyping(false)
+        // if(nextIndex > 5) setIsTyping(false)
         if(onTyping) onTyping()
         if (nextIndex >= text.length) {
           clearInterval(interval);
@@ -26,7 +26,7 @@ const TypingEffect = ({ text, speed, onTyping, onDone, isTyping, setIsTyping, sh
     }, speed);
 
     return () => clearInterval(interval);
-  }, [text, speed, onTyping, onDone]);
+  }, [text, speed, onTyping, setIsTyping, onDone]);
 
   // Slice the text up to the current index
   const displayedText = text.slice(0, index);
@@ -38,7 +38,7 @@ const TypingEffect = ({ text, speed, onTyping, onDone, isTyping, setIsTyping, sh
           {displayedText}
         </ReactMarkdown>
       </div>
-      {isTyping && showCursor && <span className="animate-pulse">|</span>}
+      {isTyping && showCursor && displayedText.length <=5 && <span className="animate-pulse">|</span>}
     </div>
   )
 };
