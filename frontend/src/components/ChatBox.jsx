@@ -196,6 +196,7 @@ const ChatBox = () => {
           </div>
           <button
             disabled={isDisabled}
+            onClick={handleSend}
             style={{
               backgroundColor: 'transparent',
               border: 'none',
@@ -207,7 +208,6 @@ const ChatBox = () => {
               className={`bg-[#86a1ea] p-1 rounded-3xl text-black ${isDisabled ? 'opacity-30' : 'opacity-100'}`}
             />
           </button>
-
         </div>
       </div>
     </div>
