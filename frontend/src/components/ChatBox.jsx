@@ -12,6 +12,7 @@ const ChatBox = () => {
   const [isDisabled, setIsDisabled] = useState(true)
   const prevMessagesLengthRef = useRef(messages?.length);
   const messagesEndRef = useRef(null);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
   const handleUpload = async () => {
     if (!file) return alert("Please select a file");
@@ -74,6 +75,24 @@ const ChatBox = () => {
   }, [])
 
   useEffect(() => {
+  const updateHeight = () => {
+    const vh = window.visualViewport?.height || window.innerHeight;
+    setViewportHeight(vh);
+  };
+
+  window.visualViewport?.addEventListener("resize", updateHeight);
+  window.visualViewport?.addEventListener("scroll", updateHeight);
+
+  updateHeight();
+
+  return () => {
+    window.visualViewport?.removeEventListener("resize", updateHeight);
+    window.visualViewport?.removeEventListener("scroll", updateHeight);
+  };
+}, []);
+
+
+  useEffect(() => {
     if (input.trim().length === 0 || isTyping) {
       setIsDisabled(true);
     } else {
@@ -90,9 +109,9 @@ const ChatBox = () => {
   }, [messages]);
 
   return (
-    <div className={`flex flex-col ${
-      messages.length > 0 ? "h-[calc(100dvh-44px)]" : "100dvh"
-    }`}>
+    <div className='flex flex-col' style={{
+      height: messages.length > 0 ? `${viewportHeight - 44}px` : '100vdh',
+    }}>
       {messages.length > 0 && <div className="h-10 shrink-0" />}
       <div className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
         messages.length > 0 ? "pb-4" : "justify-end"
