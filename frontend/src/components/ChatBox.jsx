@@ -91,7 +91,7 @@ const ChatBox = () => {
 
   return (
     <div className={`flex flex-col ${
-      messages.length > 0 ? "h-[calc(100vh-44px)]" : ""
+      messages.length > 0 ? "h-[calc(100dvh-44px)]" : "100dvh"
     }`}>
       {messages.length > 0 && <div className="h-10 shrink-0" />}
       <div className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
