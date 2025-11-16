@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 
 function App() {
   return (
-    <div className="min-h-[100dvh] flex flex-col w-full">
+    <div className="flex flex-col w-full" style={{ minHeight: '100dvh' }}>
       <Navbar />
       <div className="flex-1 flex items-center justify-center">
         <Home />
