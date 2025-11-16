@@ -1,8 +1,9 @@
 import React, { useCallback, useRef, useState } from "react";
 import axios from "axios";
-import { Paperclip, BookOpen, ArrowUp, File, X } from 'lucide-react';
+import { Paperclip, BookOpen, ArrowUp, File, X, Square } from 'lucide-react';
 import { useEffect } from "react";
 import TypingEffect from "./TypingEffect";
+
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
@@ -27,6 +28,10 @@ const ChatBox = () => {
       alert("Upload failed!");
     }
   };
+  
+  const handleAbort = useCallback(() => {
+    setIsTyping(false)
+  }, [])
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -141,7 +146,7 @@ const ChatBox = () => {
               }`}
             >
               {msg.role === 'ai' ? (
-                <TypingEffect 
+                <TypingEffect
                   text={msg.content} 
                   speed={30}
                   isTyping={isTyping}
@@ -213,7 +218,13 @@ const ChatBox = () => {
               <p className="text-sm">Study</p>
             </div>
           </div>
-          <button
+          {isTyping ? <button style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              padding: 0
+            }} onClick={handleAbort}>
+            <Square size={30} fill="#0f172b" className="bg-[#86a1ea] p-1 rounded-3xl text-slate-900" />
+          </button> : <button
             disabled={isDisabled}
             onClick={handleSend}
             style={{
@@ -226,7 +237,7 @@ const ChatBox = () => {
               size={30}
               className={`bg-[#86a1ea] p-1 rounded-3xl text-black ${isDisabled ? 'opacity-30' : 'opacity-100'}`}
             />
-          </button>
+          </button>}
         </div>
       </div>
     </div>

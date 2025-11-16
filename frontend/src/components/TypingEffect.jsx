@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const TypingEffect = ({ text, speed, onTyping, onDone, isTyping, setIsTyping, showCursor }) => {
+const TypingEffect = ({ text, speed, onTyping, onDone, isTyping, showCursor }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (!text) return;
+    if (!text || !isTyping || !showCursor) return;
 
     // Reset index when text changes
     setIndex(0);
@@ -26,7 +26,7 @@ const TypingEffect = ({ text, speed, onTyping, onDone, isTyping, setIsTyping, sh
     }, speed);
 
     return () => clearInterval(interval);
-  }, [text, speed, onTyping, setIsTyping, onDone]);
+  }, [text, speed, onTyping, isTyping, onDone]);
 
   // Slice the text up to the current index
   const displayedText = text.slice(0, index);
