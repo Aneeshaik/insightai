@@ -113,8 +113,8 @@ const ChatBox = () => {
       height: messages.length > 0 ? `${viewportHeight - 44}px` : '100%',
     }}>
       {messages.length > 0 && <div className="h-6 shrink-0" />}
-      <div className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
-        messages.length > 0 ? "pb-4" : "justify-end"
+      <div className={`flex-1 flex flex-col overflow-y-auto space-y-2 pb-4 ${
+        messages.length === 0 ? "justify-end" : ""
       }`} style={{ scrollbarWidth: "none" }}>
        {messages.map((msg, i) => (
           <div key={i} className="relative flex flex-col gap-2">
