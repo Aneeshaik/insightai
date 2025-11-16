@@ -110,7 +110,7 @@ const ChatBox = () => {
 
   return (
     <div className='flex flex-col' style={{
-      height: messages.length > 0 ? `${viewportHeight - 44}px` : '100vdh',
+      height: messages.length > 0 ? `${viewportHeight - 44}px` : '100%',
     }}>
       {messages.length > 0 && <div className="h-6 shrink-0" />}
       <div className={`flex-1 flex flex-col overflow-y-auto space-y-2 ${
