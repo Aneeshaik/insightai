@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="flex flex-col w-full" style={{ minHeight: '100dvh' }}>
       <Navbar />
-      <div className="flex-1 flex justify-center pt-4">
+      <div className="flex-1 flex justify-center pt-3">
         <Home />
       </div>
     </div>
