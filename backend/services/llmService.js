@@ -28,8 +28,8 @@ export async function createVectorStoreFromText(text) {
             model: "gemini-embedding-001",
             apiKey: process.env.GOOGLE_API_KEY
         });
-        console.log("after embedding");
-        console.log("Starting FaissStore.fromDocuments");
+        // console.log("after embedding");
+        // console.log("Starting FaissStore.fromDocuments");
         const store = await FaissStore.fromDocuments(docs, embeddings);
         // console.log("Completed FaissStore.fromDocuments");
         // console.log("store sotore ", store);
