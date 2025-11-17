@@ -23,7 +23,7 @@ export async function createVectorStoreFromText(text) {
             chunkOverlap: 200
         });
         const docs = await splitter.splitDocuments([new Document({ pageContent: text })]);
-        console.log("docs docs ", docs);
+        // console.log("docs docs ", docs);
         const embeddings = new GoogleGenerativeAIEmbeddings({
             model: "gemini-embedding-001",
             apiKey: process.env.GOOGLE_API_KEY
@@ -31,8 +31,8 @@ export async function createVectorStoreFromText(text) {
         console.log("after embedding");
         console.log("Starting FaissStore.fromDocuments");
         const store = await FaissStore.fromDocuments(docs, embeddings);
-        console.log("Completed FaissStore.fromDocuments");
-        console.log("store sotore ", store);
+        // console.log("Completed FaissStore.fromDocuments");
+        // console.log("store sotore ", store);
         try{
            if(!fs.existsSync(vectorStorePath)){
             fs.mkdirSync(vectorStorePath, {recursive: true})
