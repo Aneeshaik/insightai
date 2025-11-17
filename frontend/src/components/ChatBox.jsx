@@ -57,7 +57,7 @@ const ChatBox = () => {
       setIsTyping(true)
       setIsDisabled(true)
       const res = await axios.post("https://paper-brain-94qd.vercel.app/chat", {
-        message: input,
+        message: `You are a RAG-based model. Answer from documents when the question needs document context. For casual greetings or general conversation, respond normally.\n\nUser: ${input}`
       });
       setMessages((prev) => {
         const updated = [...prev]
